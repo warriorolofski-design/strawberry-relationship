@@ -70,8 +70,7 @@ async function noPath(){
     <div class="strawberry">🍓</div>
     <h2>گزینه خوبی رو انتخاب کردی 😌</h2>
     <p>اگه از انتخابت اطمینان داری، یه موزیک برام بفرست 🎵</p>
-    <a class="music-btn" href="https://open.spotify.com/" target="_blank" rel="noopener">بریم سراغ موزیک 🎧</a>
-    <p class="small">می‌تونی لینک آهنگ موردنظرت رو از همین‌جا برام بفرستی.</p>
+    <p class="small">حالا نوبت توئه که آهنگی که می‌خوای رو برام بفرستی ❤️</p>
   `);
 }
 

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>پنل مدیریت 🍓</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="app">
+<section class="card admin">
+<div class="strawberry">🍓</div>
+<h1>پنل مدیریت</h1>
+<p>اینجا جواب‌ها و عکس‌های خاطره را می‌بینی.</p>
+<input id="password" type="password" placeholder="رمز مدیریت">
+<button class="bubble selected" onclick="loadAll()">ورود</button>
+<hr>
+<h2>آپلود عکس</h2>
+<input id="photo" type="file" accept="image/*">
+<button class="bubble" onclick="uploadPhoto()">آپلود</button>
+<div id="msg" class="notice hidden"></div>
+<h2>جواب‌ها</h2>
+<div style="overflow:auto"><table><thead><tr><th>زمان</th><th>سؤال</th><th>جواب</th><th>Session</th></tr></thead><tbody id="rows"></tbody></table></div>
+</section>
+</main>
+<script>
+let pwd="";
+function show(t){const m=document.getElementById("msg");m.textContent=t;m.classList.remove("hidden")}
+async function loadAll(){
+  pwd=document.getElementById("password").value;
+  const r=await fetch("/api/admin/answers",{headers:{"x-admin-password":pwd}});
+  if(!r.ok){show("رمز اشتباه است یا دیتابیس هنوز وصل نشده.");return}
+  const rows=await r.json();
+  document.getElementById("rows").innerHTML=rows.map(x=>`<tr><td>${new Date(x.created_at).toLocaleString("fa-IR")}</td><td>${esc(x.question_text)}</td><td>${esc(x.answer)}</td><td>${esc(x.session_id.slice(0,8))}</td></tr>`).join("");
+  show("جواب‌ها بارگذاری شدند.");
+}
+async function uploadPhoto(){
+  const f=document.getElementById("photo").files[0];
+  if(!f){show("اول یک عکس انتخاب کن.");return}
+  const fd=new FormData();fd.append("photo",f);
+  const r=await fetch("/api/admin/photo",{method:"POST",headers:{"x-admin-password":pwd},body:fd});
+  show(r.ok?"عکس آپلود شد و در سایت نمایش داده می‌شود.":"آپلود ناموفق بود.");
+}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+</script>
+</body>
+</html>
